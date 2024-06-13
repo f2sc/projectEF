@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace prrojectEF.Models
+namespace projectEF.Models
 {
     public class Categoria
     {
@@ -14,5 +14,12 @@ namespace prrojectEF.Models
         public string Descripcion { get; set; }
 
         public virtual ICollection<Tarea> Tareas { get; set; }
+
+        public Categoria()
+        {
+            Nombre = string.Empty;  
+            Descripcion = string.Empty;  
+            Tareas = new List<Tarea>();  
+        }
     }
 }

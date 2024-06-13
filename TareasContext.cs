@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using prrojectEF.Models;
+using projectEF.Models;
 
-namespace prrojectEF
+namespace projectEF
 {
     public class TareasContext:DbContext
     {
