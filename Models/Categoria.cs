@@ -1,4 +1,6 @@
 ﻿
+using System.Text.Json.Serialization;
+
 namespace projectEF.Models
 {
     public class Categoria
@@ -9,6 +11,7 @@ namespace projectEF.Models
 
         public string Descripcion { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Tarea> Tareas { get; set; }
 
         public int Peso { get; set; }
