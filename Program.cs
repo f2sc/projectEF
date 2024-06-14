@@ -23,6 +23,21 @@ app.MapGet("/api/tareas", async ([FromServices] TareasContext dbContext) =>
     return Results.Ok(dbContext.Tareas.Include(p => p.Categoria));
 });
 
+app.MapPost("/api/tareas", async ([FromServices] TareasContext dbContext, [FromBody] Tarea tarea) =>
+{
+    tarea.TareaId = Guid.NewGuid();
+    tarea.FechaCreacion = DateTime.Now;
+    
+    //Se puede guardar de 2 formas:
+    await dbContext.AddAsync(tarea); //1
+    //await dbContext.Tareas.AddAsync(tarea); //2
+
+    await dbContext.SaveChangesAsync();
+
+    return Results.Ok("Insertado correctamente la tarea " + tarea.Titulo);
+});
+
+
 app.MapGet("/api/tareas/baja", async ([FromServices] TareasContext dbContext) => 
 {
     var listaTareas = dbContext.Tareas.Include(p => p.Categoria).Where(p => p.PrioridadTarea == Prioridad.Baja);
