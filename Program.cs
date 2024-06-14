@@ -20,14 +20,14 @@ app.MapGet("/dbconexion", async ([FromServices] TareasContext dbContext) =>
 
 app.MapGet("/api/tareas", async ([FromServices] TareasContext dbContext) => 
 {
-    return Results.Ok(dbContext.Tareas.Include(p => p.Categoria));
+    return Results.Ok(dbContext.Tareas);
 });
 
 app.MapPost("/api/tareas", async ([FromServices] TareasContext dbContext, [FromBody] Tarea tarea) =>
 {
     tarea.TareaId = Guid.NewGuid();
     tarea.FechaCreacion = DateTime.Now;
-    
+
     //Se puede guardar de 2 formas:
     await dbContext.AddAsync(tarea); //1
     //await dbContext.Tareas.AddAsync(tarea); //2
@@ -35,6 +35,26 @@ app.MapPost("/api/tareas", async ([FromServices] TareasContext dbContext, [FromB
     await dbContext.SaveChangesAsync();
 
     return Results.Ok("Insertado correctamente la tarea " + tarea.Titulo);
+});
+
+app.MapPut("/api/tareas/{id}", async ([FromServices] TareasContext dbContext, [FromBody] Tarea tarea, [FromRoute] Guid id) =>
+{
+    Tarea? tareaExistente = dbContext.Tareas.Find(id);
+
+    if (tareaExistente != null)
+    {
+        tareaExistente.Titulo = tarea.Titulo;
+        tareaExistente.PrioridadTarea = tarea.PrioridadTarea;
+        tareaExistente.Descripcion = tarea.Descripcion;
+        tareaExistente.Categoria = tarea.Categoria;
+        tareaExistente.UrlArchivo = tarea.UrlArchivo;
+
+        await dbContext.SaveChangesAsync();
+        return Results.Ok("Actualizado correctamente la tarea con título: " + tarea.Titulo);
+    }
+    
+
+    return Results.NotFound();
 });
 
 
